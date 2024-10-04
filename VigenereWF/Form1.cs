@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -155,29 +156,7 @@ namespace VigenereWF
 
         // Thuật toán Hill
 
-        private static readonly char[] vietnameseChars = new char[]
-        {
-            'à','á','ạ','ả','ã','â','ầ','ấ','ậ','ẩ','ẫ','ă','ằ','ắ','ặ','ẳ','ẵ',
-            'è','é','ẹ','ẻ','ẽ','ê','ề','ế','ệ','ể','ễ',
-            'ì','í','ị','ỉ','ĩ',
-            'ò','ó','ọ','ỏ','õ','ô','ồ','ố','ộ','ổ','ỗ','ơ','ờ','ớ','ợ','ở','ỡ',
-            'ù','ú','ụ','ủ','ũ','ư','ừ','ứ','ự','ử','ữ',
-            'ỳ','ý','ỵ','ỷ','ỹ',
-            'đ',
-            'À','Á','Ạ','Ả','Ã','Â','Ầ','Ấ','Ậ','Ẩ','Ẫ','Ă','Ằ','Ắ','Ặ','Ẳ','Ẵ',
-            'È','É','Ẹ','Ẻ','Ẽ','Ê','Ề','Ế','Ệ','Ể','Ễ',
-            'Ì','Í','Ị','Ỉ','Ĩ',
-            'Ò','Ó','Ọ','Ỏ','Õ','Ô','Ồ','Ố','Ộ','Ổ','Ỗ','Ơ','Ờ','Ớ','Ợ','Ở','Ỡ',
-            'Ù','Ú','Ụ','Ủ','Ũ','Ư','Ừ','Ứ','Ự','Ử','Ữ',
-            'Ỳ','Ý','Ỵ','Ỷ','Ỹ',
-            'Đ'
-        };
         private static readonly int charSetSize = Ascii.Length;
-
-        private static bool IsVietnameseChar(char c)
-        {
-            return Array.IndexOf(vietnameseChars, c) >= 0;
-        }
         private static int Mod(int a, int b)
         {
             return (a % b + b) % b;
@@ -214,36 +193,38 @@ namespace VigenereWF
         public static string Encrypt(string plaintext, int[,] key)
         {
             int n = key.GetLength(0);
-            StringBuilder ciphertext = new StringBuilder();
+            List<int> encryptedVector = new List<int>();
+            int mod = 97;
 
-            for (int i = 0; i < plaintext.Length; i += n)
-            { 
+            int i;
+            for (i = 0; i + n <= plaintext.Length; i += n)
+            {
                 int[] vector = new int[n];
+
                 for (int j = 0; j < n; j++)
                 {
-                    if (i + j < plaintext.Length)
-                    {
-                        vector[j] = CharToIndex(plaintext[i + j]);
-                    }
-                    else
-                    {
-                        vector[j] = CharToIndex(' '); // Sử dụng ký tự khoảng trắng nếu thiếu ký tự
-                    }
+                    vector[j] = CharToIndex(plaintext[i + j]);
                 }
 
                 for (int row = 0; row < n; row++)
                 {
-                    int sum = 0;
+                    int encryptedValue = 0;
                     for (int col = 0; col < n; col++)
                     {
-                        sum += key[row, col] * vector[col];
+                        encryptedValue += key[row, col] * vector[col];
                     }
-                    ciphertext.Append(IndexToChar(sum));
+                    encryptedVector.Add(encryptedValue % mod); 
                 }
-                
+            }
+            if (i < plaintext.Length)
+            {
+                for (int j = i; j < plaintext.Length; j++)
+                {
+                    encryptedVector.Add(CharToIndex(plaintext[j])); 
+                }
             }
 
-            return ciphertext.ToString();
+            return string.Join("", encryptedVector.Select(index => IndexToChar(index)));
         }
 
         private static int[,] InverseMatrix(int[,] matrix)
@@ -270,20 +251,40 @@ namespace VigenereWF
                 MessageBox.Show("Nhập thiếu bản rõ hoặc khóa K!!");
             else
             {
-                int[,] key = {
-                { int.Parse(textBox00.Text), int.Parse(textBox01.Text) },
-                { int.Parse(textBox10.Text), int.Parse(textBox11.Text) }
-                };
+                int[] messageVector = plaintText.Select(c => Array.IndexOf(Ascii, c)).ToArray();
 
-                if (!IsInvertible(key))
+                // Tính kích thước ma trận khóa
+                int size = 2;
+
+                // Kiểm tra xem có ký tự nào không hợp lệ không
+                if (messageVector.Any(index => index == -1))
                 {
-                    MessageBox.Show("Ma trận không có nghịch đảo");
+                    MessageBox.Show("Văn bản chứa ký tự không hợp lệ.", "Lỗi");
                 }
                 else
                 {
-                    string plaintext = HillPlainTxt.Text;
-                    string encrypted = Encrypt(plaintext, key);
-                    HillEncryptedTxt.Text = encrypted;
+                        int[,] key = {
+                    { int.Parse(textBox00.Text), int.Parse(textBox01.Text) },
+                    { int.Parse(textBox10.Text), int.Parse(textBox11.Text) }
+                    };
+
+                    if (!IsInvertible(key))
+                    {
+                        MessageBox.Show("Ma trận không có nghịch đảo");
+                    }
+                    else
+                    {
+                        string plaintext = HillPlainTxt.Text;
+                        string encrypted = Encrypt(plaintext, key);
+                        HillEncryptedTxt.Text = encrypted;
+
+                        int[,] Inverse = new int[2, 2];
+                        Inverse = InverseMatrix(key);
+                        txtInverse00.Text = Inverse[0, 0].ToString();
+                        txtInverse01.Text = Inverse[0, 1].ToString();
+                        txtInverse10.Text = Inverse[1, 0].ToString();
+                        txtInverse11.Text = Inverse[1, 1].ToString();
+                    }
                 }
             }
         }
@@ -292,44 +293,40 @@ namespace VigenereWF
         public static string Decrypt(string ciphertext, int[,] key)
         {
             int n = key.GetLength(0);
+            List<int> decryptedVector = new List<int>();
+            int mod = 97;
 
-            StringBuilder plaintext = new StringBuilder();
             int[,] inverseKey = InverseMatrix(key);
 
-            for (int i = 0; i < ciphertext.Length; i += n)
+            int i;
+            for (i = 0; i + n <= ciphertext.Length; i += n)
             {
                 int[] vector = new int[n];
                 for (int j = 0; j < n; j++)
                 {
-                    if (i + j < ciphertext.Length)
-                    {
-                        if (IsVietnameseChar(ciphertext[i + j]))
-                        {
-                            plaintext.Append(ciphertext[i + j]);
-                        }
-                        else
-                        {
-                            vector[j] = CharToIndex(ciphertext[i + j]);
-                        }
-                    }
-                    else
-                    {
-                        vector[j] = CharToIndex(' ');
-                    }
+                    vector[j] = CharToIndex(ciphertext[i + j]);
                 }
 
                 for (int row = 0; row < n; row++)
                 {
-                    int sum = 0;
+                    int decryptedValue = 0;
                     for (int col = 0; col < n; col++)
                     {
-                        sum += inverseKey[row, col] * vector[col];
+                        decryptedValue += inverseKey[row, col] * vector[col];
                     }
-                    plaintext.Append(IndexToChar(sum));
+                    decryptedVector.Add(decryptedValue % mod);
                 }
             }
 
-            return plaintext.ToString();
+            if (i < ciphertext.Length)
+            {
+                for (int j = i; j < ciphertext.Length; j++)
+                {
+                    decryptedVector.Add(CharToIndex(ciphertext[j]));
+                }
+            }
+
+            return string.Join("", decryptedVector.Select(index => IndexToChar(index)));
         }
         private void HillDecrypted_Click(object sender, EventArgs e)
         {
@@ -375,7 +372,6 @@ namespace VigenereWF
                 textBox01.Text = key[0, 1].ToString();
                 textBox10.Text = key[1, 0].ToString();
                 textBox11.Text = key[1, 1].ToString();
-
             } while (!IsInvertible(key));
         }
 

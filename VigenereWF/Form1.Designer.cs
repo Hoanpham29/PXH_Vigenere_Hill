@@ -45,6 +45,13 @@
             this.label1 = new System.Windows.Forms.Label();
             this.EncryptedText = new System.Windows.Forms.TextBox();
             this.Hill = new System.Windows.Forms.TabPage();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.txtInverse11 = new System.Windows.Forms.TextBox();
+            this.txtInverse10 = new System.Windows.Forms.TextBox();
+            this.txtInverse01 = new System.Windows.Forms.TextBox();
+            this.txtInverse00 = new System.Windows.Forms.TextBox();
+            this.PlainDel = new System.Windows.Forms.Button();
+            this.EncryptedDel = new System.Windows.Forms.Button();
             this.groupBox5 = new System.Windows.Forms.GroupBox();
             this.button1 = new System.Windows.Forms.Button();
             this.textBox11 = new System.Windows.Forms.TextBox();
@@ -59,13 +66,12 @@
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.HillPlainTxt = new System.Windows.Forms.TextBox();
             this.HillEncrypted = new System.Windows.Forms.Button();
-            this.EncryptedDel = new System.Windows.Forms.Button();
-            this.PlainDel = new System.Windows.Forms.Button();
             this.groupBox2.SuspendLayout();
             this.Tab.SuspendLayout();
             this.Vigenere.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.Hill.SuspendLayout();
+            this.groupBox6.SuspendLayout();
             this.groupBox5.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
@@ -177,7 +183,7 @@
             this.Vigenere.Location = new System.Drawing.Point(4, 28);
             this.Vigenere.Name = "Vigenere";
             this.Vigenere.Padding = new System.Windows.Forms.Padding(3);
-            this.Vigenere.Size = new System.Drawing.Size(1223, 718);
+            this.Vigenere.Size = new System.Drawing.Size(1223, 759);
             this.Vigenere.TabIndex = 0;
             this.Vigenere.Text = "Vigenere";
             this.Vigenere.UseVisualStyleBackColor = true;
@@ -244,6 +250,7 @@
             // 
             // Hill
             // 
+            this.Hill.Controls.Add(this.groupBox6);
             this.Hill.Controls.Add(this.PlainDel);
             this.Hill.Controls.Add(this.EncryptedDel);
             this.Hill.Controls.Add(this.groupBox5);
@@ -260,6 +267,73 @@
             this.Hill.Text = "Hill";
             this.Hill.UseVisualStyleBackColor = true;
             // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.txtInverse11);
+            this.groupBox6.Controls.Add(this.txtInverse10);
+            this.groupBox6.Controls.Add(this.txtInverse01);
+            this.groupBox6.Controls.Add(this.txtInverse00);
+            this.groupBox6.Location = new System.Drawing.Point(732, 549);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(368, 174);
+            this.groupBox6.TabIndex = 19;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Ma Trận Nghịch Đảo";
+            // 
+            // txtInverse11
+            // 
+            this.txtInverse11.Enabled = false;
+            this.txtInverse11.Location = new System.Drawing.Point(228, 114);
+            this.txtInverse11.Name = "txtInverse11";
+            this.txtInverse11.Size = new System.Drawing.Size(100, 27);
+            this.txtInverse11.TabIndex = 3;
+            // 
+            // txtInverse10
+            // 
+            this.txtInverse10.Enabled = false;
+            this.txtInverse10.Location = new System.Drawing.Point(65, 114);
+            this.txtInverse10.Name = "txtInverse10";
+            this.txtInverse10.Size = new System.Drawing.Size(100, 27);
+            this.txtInverse10.TabIndex = 2;
+            // 
+            // txtInverse01
+            // 
+            this.txtInverse01.Enabled = false;
+            this.txtInverse01.Location = new System.Drawing.Point(228, 43);
+            this.txtInverse01.Name = "txtInverse01";
+            this.txtInverse01.Size = new System.Drawing.Size(100, 27);
+            this.txtInverse01.TabIndex = 1;
+            // 
+            // txtInverse00
+            // 
+            this.txtInverse00.Enabled = false;
+            this.txtInverse00.Location = new System.Drawing.Point(65, 43);
+            this.txtInverse00.Name = "txtInverse00";
+            this.txtInverse00.Size = new System.Drawing.Size(100, 27);
+            this.txtInverse00.TabIndex = 0;
+            // 
+            // PlainDel
+            // 
+            this.PlainDel.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.PlainDel.Location = new System.Drawing.Point(14, 489);
+            this.PlainDel.Name = "PlainDel";
+            this.PlainDel.Size = new System.Drawing.Size(114, 36);
+            this.PlainDel.TabIndex = 18;
+            this.PlainDel.Text = "Xóa bản rõ";
+            this.PlainDel.UseVisualStyleBackColor = true;
+            this.PlainDel.Click += new System.EventHandler(this.PlainDel_Click);
+            // 
+            // EncryptedDel
+            // 
+            this.EncryptedDel.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
+            this.EncryptedDel.Location = new System.Drawing.Point(1095, 489);
+            this.EncryptedDel.Name = "EncryptedDel";
+            this.EncryptedDel.Size = new System.Drawing.Size(114, 36);
+            this.EncryptedDel.TabIndex = 17;
+            this.EncryptedDel.Text = "Xóa bản mã ";
+            this.EncryptedDel.UseVisualStyleBackColor = true;
+            this.EncryptedDel.Click += new System.EventHandler(this.EncryptedDel_Click);
+            // 
             // groupBox5
             // 
             this.groupBox5.Controls.Add(this.button1);
@@ -268,7 +342,7 @@
             this.groupBox5.Controls.Add(this.textBox10);
             this.groupBox5.Controls.Add(this.textBox01);
             this.groupBox5.Controls.Add(this.textBox00);
-            this.groupBox5.Location = new System.Drawing.Point(344, 525);
+            this.groupBox5.Location = new System.Drawing.Point(122, 549);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(550, 174);
             this.groupBox5.TabIndex = 16;
@@ -398,28 +472,6 @@
             this.HillEncrypted.UseVisualStyleBackColor = true;
             this.HillEncrypted.Click += new System.EventHandler(this.HillEncrypted_Click);
             // 
-            // EncryptedDel
-            // 
-            this.EncryptedDel.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.EncryptedDel.Location = new System.Drawing.Point(1095, 489);
-            this.EncryptedDel.Name = "EncryptedDel";
-            this.EncryptedDel.Size = new System.Drawing.Size(114, 36);
-            this.EncryptedDel.TabIndex = 17;
-            this.EncryptedDel.Text = "Xóa bản mã ";
-            this.EncryptedDel.UseVisualStyleBackColor = true;
-            this.EncryptedDel.Click += new System.EventHandler(this.EncryptedDel_Click);
-            // 
-            // PlainDel
-            // 
-            this.PlainDel.Font = new System.Drawing.Font("Arial", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(163)));
-            this.PlainDel.Location = new System.Drawing.Point(14, 489);
-            this.PlainDel.Name = "PlainDel";
-            this.PlainDel.Size = new System.Drawing.Size(114, 36);
-            this.PlainDel.TabIndex = 18;
-            this.PlainDel.Text = "Xóa bản rõ";
-            this.PlainDel.UseVisualStyleBackColor = true;
-            this.PlainDel.Click += new System.EventHandler(this.PlainDel_Click);
-            // 
             // PXH_Vigenere_Hill
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(120F, 120F);
@@ -437,6 +489,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.Hill.ResumeLayout(false);
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
             this.groupBox5.ResumeLayout(false);
             this.groupBox5.PerformLayout();
             this.groupBox3.ResumeLayout(false);
@@ -481,6 +535,11 @@
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Button PlainDel;
         private System.Windows.Forms.Button EncryptedDel;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.TextBox txtInverse11;
+        private System.Windows.Forms.TextBox txtInverse10;
+        private System.Windows.Forms.TextBox txtInverse01;
+        private System.Windows.Forms.TextBox txtInverse00;
     }
 }
 
